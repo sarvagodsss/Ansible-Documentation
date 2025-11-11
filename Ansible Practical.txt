@@ -1,0 +1,81 @@
+step 1. Create 2 Ec2 Instance [main server & remote server]
+------------------------------------------------------------------
+step 2. [main server] => 
+     
+ # ssh-keygen
+ # cd .ssh/
+-> after that copy the (id_ed25519.pub) and past on [remote server] authorized-key 
+-> go to [main server] and take ssh on [remote server]
+
+-> ( ssh ubuntu@[remote server ip] )
+
+----------------------------------------------------------------------
+step 3. Install Ansible on [main server]
+
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+
+# ansible --version
+# ansible localhost -m ping
+------------------------------------------------------------
+
+-> ansible config files
+
+1. /etc/ansible/ansible.cfg
+2. /etc/ansible/hosts
+
+----------------------------------------------------------------
+
+step 4. Inside ansible dir.
+
+ansible -> # mkdir playbooks
+ansible -> # cd playbooks/
+playbooks -> # sudo vim app-install.yml
+----------------------------------------------
+---
+- name: Install and Start the Service
+  hosts: all   # Runs on all hosts defined in your inventory
+  become: yes  # (optional but recommended) run tasks with sudo privileges
+
+  tasks:
+    - name: Installing nginx
+      apt:
+        name: nginx
+        state: present   # Ensures nginx is installed
+
+    - name: Starting the nginx service
+      service:
+        name: nginx
+        state: started   # Ensures nginx is running
+        enabled: true    # Ensures nginx starts automatically on boot
+
+
+------------------------------------------------------------------------------
+
+step 5. copy the [remote server ip] and past on /etc/ansible/hosts file 
+
+   # Ex 1: ungrouped hosts
+      
+   172.31.0.19 -> [remote server ip]
+   ## green.example.com
+---------------------------------------------------------------
+
+step 6. [main server] => # ansible-playbook app-install.yml
+
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
